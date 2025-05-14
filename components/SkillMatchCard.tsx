@@ -1,6 +1,6 @@
 import React from 'react';
 import { View, Text, StyleSheet, Image, TouchableOpacity } from 'react-native';
-import { Star, Bookmark, MapPin } from 'lucide-react-native';
+import { Star, Bookmark, MapPin, Clock, Tag } from 'lucide-react-native';
 import { LinearGradient } from 'expo-linear-gradient';
 
 type SkillMatchCardProps = {
@@ -9,6 +9,8 @@ type SkillMatchCardProps = {
     name: string;
     avatar: string;
     distance: string;
+    category: string;
+    availability: string[];
     skillOffered: string;
     skillOfferedLevel: string;
     skillNeeded: string;
@@ -17,11 +19,12 @@ type SkillMatchCardProps = {
     rating: number;
     reviewCount: number;
   };
+  onPress?: () => void;
 };
 
-export default function SkillMatchCard({ match }: SkillMatchCardProps) {
+export default function SkillMatchCard({ match, onPress }: SkillMatchCardProps) {
   return (
-    <View style={styles.container}>
+    <TouchableOpacity style={styles.container} onPress={onPress} activeOpacity={0.9}>
       <Image source={{ uri: match.avatar }} style={styles.avatar} />
       
       <LinearGradient
@@ -46,6 +49,17 @@ export default function SkillMatchCard({ match }: SkillMatchCardProps) {
             <Star size={16} color="#FBBF24" />
             <Text style={styles.rating}>{match.rating}</Text>
           </View>
+        </View>
+
+        <View style={styles.categoryContainer}>
+          <Tag size={14} color="#CBD5E1" />
+          <Text style={styles.categoryText}>{match.category}</Text>
+          <Clock size={14} color="#CBD5E1" style={styles.availabilityIcon} />
+          <Text style={styles.availabilityText}>
+            {match.availability.length > 0 
+              ? match.availability.join(', ') 
+              : 'Flexible'}
+          </Text>
         </View>
 
         <View style={styles.skillsContainer}>
@@ -76,7 +90,7 @@ export default function SkillMatchCard({ match }: SkillMatchCardProps) {
           {match.description}
         </Text>
       </View>
-    </View>
+    </TouchableOpacity>
   );
 }
 
@@ -86,6 +100,11 @@ const styles = StyleSheet.create({
     borderRadius: 24,
     overflow: 'hidden',
     backgroundColor: '#FFFFFF',
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.1,
+    shadowRadius: 8,
+    elevation: 3,
   },
   avatar: {
     width: '100%',
@@ -117,7 +136,7 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     justifyContent: 'space-between',
     alignItems: 'flex-start',
-    marginBottom: 16,
+    marginBottom: 8,
   },
   name: {
     fontSize: 24,
@@ -130,6 +149,24 @@ const styles = StyleSheet.create({
     alignItems: 'center',
   },
   distance: {
+    marginLeft: 4,
+    fontSize: 14,
+    color: '#CBD5E1',
+  },
+  categoryContainer: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    marginBottom: 12,
+  },
+  categoryText: {
+    marginLeft: 4,
+    fontSize: 14,
+    color: '#CBD5E1',
+  },
+  availabilityIcon: {
+    marginLeft: 12,
+  },
+  availabilityText: {
     marginLeft: 4,
     fontSize: 14,
     color: '#CBD5E1',
@@ -199,7 +236,7 @@ const styles = StyleSheet.create({
   },
   description: {
     fontSize: 14,
-    color: '#E2E8F0',
     lineHeight: 20,
+    color: '#E2E8F0',
   },
 });

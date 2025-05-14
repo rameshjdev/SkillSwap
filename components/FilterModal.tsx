@@ -1,10 +1,19 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { View, Text, StyleSheet, Modal, TouchableOpacity, TextInput, ScrollView } from 'react-native';
 import { X, Check } from 'lucide-react-native';
+import { Slider } from 'react-native-elements';
 
 type FilterModalProps = {
   visible: boolean;
   onClose: () => void;
+  onApply: (filters: FilterOptions) => void;
+  initialFilters?: FilterOptions;
+};
+
+export type FilterOptions = {
+  categories: string[];
+  maxDistance: number;
+  availability: string[];
 };
 
 const skillCategories = [
@@ -20,35 +29,55 @@ const skillCategories = [
   'Arts & Crafts',
 ];
 
-export default function FilterModal({ visible, onClose }: FilterModalProps) {
-  const [distance, setDistance] = useState('15');
-  const [selectedOffered, setSelectedOffered] = useState<string[]>([]);
-  const [selectedLooking, setSelectedLooking] = useState<string[]>([]);
+const availabilityOptions = [
+  'Weekdays',
+  'Weekends',
+  'Evenings',
+  'Mornings',
+  'Flexible',
+];
 
-  const toggleCategoryOffered = (category: string) => {
-    if (selectedOffered.includes(category)) {
-      setSelectedOffered(selectedOffered.filter(item => item !== category));
+export default function FilterModal({ visible, onClose, onApply, initialFilters }: FilterModalProps) {
+  const [distance, setDistance] = useState(initialFilters?.maxDistance || 15);
+  const [selectedCategories, setSelectedCategories] = useState<string[]>(initialFilters?.categories || []);
+  const [selectedAvailability, setSelectedAvailability] = useState<string[]>(initialFilters?.availability || []);
+
+  useEffect(() => {
+    if (initialFilters) {
+      setDistance(initialFilters.maxDistance);
+      setSelectedCategories(initialFilters.categories || []);
+      setSelectedAvailability(initialFilters.availability || []);
+    }
+  }, [initialFilters, visible]);
+
+  const toggleCategory = (category: string) => {
+    if (selectedCategories.includes(category)) {
+      setSelectedCategories(selectedCategories.filter(item => item !== category));
     } else {
-      setSelectedOffered([...selectedOffered, category]);
+      setSelectedCategories([...selectedCategories, category]);
     }
   };
 
-  const toggleCategoryLooking = (category: string) => {
-    if (selectedLooking.includes(category)) {
-      setSelectedLooking(selectedLooking.filter(item => item !== category));
+  const toggleAvailability = (option: string) => {
+    if (selectedAvailability.includes(option)) {
+      setSelectedAvailability(selectedAvailability.filter(item => item !== option));
     } else {
-      setSelectedLooking([...selectedLooking, category]);
+      setSelectedAvailability([...selectedAvailability, option]);
     }
   };
 
   const resetFilters = () => {
-    setDistance('15');
-    setSelectedOffered([]);
-    setSelectedLooking([]);
+    setDistance(15);
+    setSelectedCategories([]);
+    setSelectedAvailability([]);
   };
 
   const applyFilters = () => {
-    // Apply filters here
+    onApply({
+      categories: selectedCategories,
+      maxDistance: distance,
+      availability: selectedAvailability,
+    });
     onClose();
   };
 
@@ -70,39 +99,47 @@ export default function FilterModal({ visible, onClose }: FilterModalProps) {
 
           <ScrollView style={styles.scrollContent}>
             <View style={styles.filterSection}>
-              <Text style={styles.sectionTitle}>Distance</Text>
+              <Text style={styles.sectionTitle}>Maximum Distance</Text>
               <View style={styles.distanceContainer}>
-                <TextInput
-                  style={styles.distanceInput}
+                <Slider
                   value={distance}
-                  onChangeText={setDistance}
-                  keyboardType="numeric"
+                  onValueChange={(value) => setDistance(value)}
+                  minimumValue={1}
+                  maximumValue={100}
+                  step={1}
+                  thumbStyle={styles.sliderThumb}
+                  trackStyle={styles.sliderTrack}
+                  minimumTrackTintColor="#28693C"
+                  thumbTintColor="#28693C"
+                  style={styles.slider}
                 />
-                <Text style={styles.distanceUnit}>miles</Text>
+                <View style={styles.distanceTextContainer}>
+                  <Text style={styles.distanceValue}>{distance} miles</Text>
+                </View>
               </View>
             </View>
 
             <View style={styles.filterSection}>
-              <Text style={styles.sectionTitle}>Skills Offered</Text>
+              <Text style={styles.sectionTitle}>Skill Categories</Text>
               <View style={styles.categoriesContainer}>
                 {skillCategories.map(category => (
                   <TouchableOpacity
-                    key={`offered-${category}`}
+                    key={`category-${category}`}
                     style={[
                       styles.categoryChip,
-                      selectedOffered.includes(category) && styles.selectedChip,
+                      selectedCategories.includes(category) && styles.selectedChip,
                     ]}
-                    onPress={() => toggleCategoryOffered(category)}
+                    onPress={() => toggleCategory(category)}
                   >
                     <Text
                       style={[
                         styles.categoryText,
-                        selectedOffered.includes(category) && styles.selectedCategoryText,
+                        selectedCategories.includes(category) && styles.selectedCategoryText,
                       ]}
                     >
                       {category}
                     </Text>
-                    {selectedOffered.includes(category) && (
+                    {selectedCategories.includes(category) && (
                       <Check size={16} color="#FFFFFF" style={styles.checkIcon} />
                     )}
                   </TouchableOpacity>
@@ -111,26 +148,26 @@ export default function FilterModal({ visible, onClose }: FilterModalProps) {
             </View>
 
             <View style={styles.filterSection}>
-              <Text style={styles.sectionTitle}>Skills Looking For</Text>
+              <Text style={styles.sectionTitle}>Availability</Text>
               <View style={styles.categoriesContainer}>
-                {skillCategories.map(category => (
+                {availabilityOptions.map(option => (
                   <TouchableOpacity
-                    key={`looking-${category}`}
+                    key={`availability-${option}`}
                     style={[
                       styles.categoryChip,
-                      selectedLooking.includes(category) && styles.selectedChip,
+                      selectedAvailability.includes(option) && styles.selectedChip,
                     ]}
-                    onPress={() => toggleCategoryLooking(category)}
+                    onPress={() => toggleAvailability(option)}
                   >
                     <Text
                       style={[
                         styles.categoryText,
-                        selectedLooking.includes(category) && styles.selectedCategoryText,
+                        selectedAvailability.includes(option) && styles.selectedCategoryText,
                       ]}
                     >
-                      {category}
+                      {option}
                     </Text>
-                    {selectedLooking.includes(category) && (
+                    {selectedAvailability.includes(option) && (
                       <Check size={16} color="#FFFFFF" style={styles.checkIcon} />
                     )}
                   </TouchableOpacity>
@@ -194,20 +231,28 @@ const styles = StyleSheet.create({
     marginBottom: 12,
   },
   distanceContainer: {
-    flexDirection: 'row',
+    marginHorizontal: 8,
+  },
+  slider: {
+    height: 40,
+  },
+  sliderThumb: {
+    width: 20,
+    height: 20,
+    borderRadius: 10,
+  },
+  sliderTrack: {
+    height: 6,
+    borderRadius: 3,
+  },
+  distanceTextContainer: {
     alignItems: 'center',
+    marginTop: 8,
   },
-  distanceInput: {
-    backgroundColor: '#F0F0F0',
-    borderRadius: 8,
-    padding: 8,
-    width: 80,
+  distanceValue: {
     fontSize: 16,
-    marginRight: 8,
-  },
-  distanceUnit: {
-    fontSize: 16,
-    color: '#666666',
+    fontWeight: '500',
+    color: '#28693C',
   },
   categoriesContainer: {
     flexDirection: 'row',
@@ -215,20 +260,20 @@ const styles = StyleSheet.create({
   },
   categoryChip: {
     flexDirection: 'row',
-    backgroundColor: '#F0F0F0',
-    borderRadius: 16,
-    paddingVertical: 8,
+    alignItems: 'center',
+    backgroundColor: '#F2F2F2',
     paddingHorizontal: 12,
+    paddingVertical: 8,
+    borderRadius: 20,
     marginRight: 8,
     marginBottom: 8,
-    alignItems: 'center',
   },
   selectedChip: {
-    backgroundColor: '#12B0A0',
+    backgroundColor: '#28693C',
   },
   categoryText: {
     fontSize: 14,
-    color: '#666666',
+    color: '#333333',
   },
   selectedCategoryText: {
     color: '#FFFFFF',
@@ -246,20 +291,24 @@ const styles = StyleSheet.create({
   resetButton: {
     paddingVertical: 12,
     paddingHorizontal: 16,
+    borderRadius: 8,
+    borderWidth: 1,
+    borderColor: '#CCCCCC',
   },
   resetButtonText: {
     fontSize: 16,
     color: '#666666',
+    fontWeight: '500',
   },
   applyButton: {
-    backgroundColor: '#12B0A0',
+    backgroundColor: '#28693C',
     paddingVertical: 12,
-    paddingHorizontal: 20,
+    paddingHorizontal: 24,
     borderRadius: 8,
   },
   applyButtonText: {
     fontSize: 16,
-    fontWeight: '600',
     color: '#FFFFFF',
+    fontWeight: '500',
   },
 });
