@@ -5,7 +5,7 @@ export default function Index() {
   return (
     <>
       <Stack.Screen options={{ headerShown: false }} />
-      <Redirect href="/(tabs)" />
+      <Redirect href="/onboarding" />
     </>
   );
 }

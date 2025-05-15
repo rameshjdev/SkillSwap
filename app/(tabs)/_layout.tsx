@@ -9,8 +9,8 @@ export default function TabLayout() {
   return (
     <Tabs
       screenOptions={{
-        tabBarActiveTintColor: '#D4AF37',
-        tabBarInactiveTintColor: 'rgba(145, 147, 142, 0.92)',
+        tabBarActiveTintColor: '#000000',
+        tabBarInactiveTintColor: '#FFDE59',
         tabBarLabelStyle: { 
           fontSize: 12,
           fontWeight: '600',
@@ -51,13 +51,13 @@ export default function TabLayout() {
         },
         headerBackground: () => (
           <LinearGradient
-            colors={['#28693C', '#D4AF37']}
+            colors={['#FFDE59', '#FFDE59']}
             style={StyleSheet.absoluteFill}
             start={{ x: 0, y: 0 }}
             end={{ x: 1, y: 0 }}
           />
         ),
-        headerTintColor: '#FFFFFF',
+        headerTintColor: '#000000',
         headerTitleStyle: {
           fontWeight: 'bold',
         },
