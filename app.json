@@ -1,28 +1,33 @@
 {
   "expo": {
     "name": "SkillSwap",
-    "slug": "SkillSwap",
+    "slug": "skillswap",
     "version": "1.0.0",
     "orientation": "portrait",
-    "icon": "./assets/images/icon.png",
-    "scheme": "myapp",
-    "userInterfaceStyle": "automatic",
-    "newArchEnabled": true,
+    "icon": "./assets/icon.png",
+    "userInterfaceStyle": "light",
+    "splash": {
+      "image": "./assets/splash.png",
+      "resizeMode": "contain",
+      "backgroundColor": "#ffffff"
+    },
+    "assetBundlePatterns": [
+      "**/*"
+    ],
     "ios": {
       "supportsTablet": true
     },
-    "web": {
-      "bundler": "metro",
-      "output": "single",
-      "favicon": "./assets/images/favicon.png"
+    "android": {
+      "adaptiveIcon": {
+        "foregroundImage": "./assets/adaptive-icon.png",
+        "backgroundColor": "#ffffff"
+      }
     },
-    "plugins": ["expo-router", "expo-font", "expo-web-browser"],
+    "web": {
+      "favicon": "./assets/favicon.png"
+    },
     "experiments": {
       "typedRoutes": true
-    },
-    "androidStatusBar": {
-      "backgroundColor": "#000000",
-      "translucent": false
     }
   }
 }

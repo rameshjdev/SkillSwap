@@ -1,10 +1,19 @@
 import React, { useState } from 'react';
 import { View, Text, StyleSheet, Image, TouchableOpacity, Animated, PanResponder } from 'react-native';
-import { useRouter } from 'expo-router';
+import { useNavigation } from '@react-navigation/native';
 import { Ionicons } from '@expo/vector-icons';
+import type { NativeStackNavigationProp } from '@react-navigation/native-stack';
+
+type RootStackParamList = {
+  Onboarding: undefined;
+  Signup: undefined;
+  MainApp: undefined;
+};
+
+type NavigationProp = NativeStackNavigationProp<RootStackParamList, 'Onboarding'>;
 
 export default function OnboardingScreen() {
-  const router = useRouter();
+  const navigation = useNavigation<NavigationProp>();
   const [slideAnimation] = useState(new Animated.Value(0));
   const [slideComplete, setSlideComplete] = useState(false);
   
@@ -28,7 +37,7 @@ export default function OnboardingScreen() {
         }).start(() => {
           setSlideComplete(true);
           // Navigate after a short delay to show the completed slide
-          setTimeout(() => router.push('/signup'), 200);
+          setTimeout(() => navigation.navigate('Signup'), 200);
         });
       } else {
         // Return to start position
@@ -224,4 +233,4 @@ const styles = StyleSheet.create({
     position: 'absolute',
     zIndex: 1,
   },
-});
+}); 

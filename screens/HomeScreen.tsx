@@ -1,8 +1,8 @@
 import React, { useState, useEffect } from 'react';
 import { StyleSheet, Text, View, FlatList, TouchableOpacity, SafeAreaView, TextInput } from 'react-native';
 import { Filter, Search } from 'lucide-react-native';
-import SkillMatchCard from '@/components/SkillMatchCard';
-import FilterModal, { FilterOptions } from '@/components/FilterModal';
+import SkillMatchCard from '../components/SkillMatchCard';
+import FilterModal, { FilterOptions } from '../components/FilterModal';
 
 // Mock data for skill matches - this would eventually be replaced with real data from your backend
 const mockSkillMatches = [
@@ -68,7 +68,7 @@ const mockSkillMatches = [
   },
 ];
 
-export default function DiscoveryScreen() {
+export default function HomeScreen() {
   const [filterModalVisible, setFilterModalVisible] = useState(false);
   const [searchQuery, setSearchQuery] = useState('');
   const [skillOffers, setSkillOffers] = useState(mockSkillMatches);
@@ -249,7 +249,6 @@ const styles = StyleSheet.create({
   filterText: {
     marginLeft: 6,
     fontSize: 14,
-    fontWeight: '500',
     color: '#333333',
   },
   searchContainer: {
@@ -259,7 +258,8 @@ const styles = StyleSheet.create({
     marginHorizontal: 16,
     marginVertical: 8,
     paddingHorizontal: 12,
-    borderRadius: 10,
+    paddingVertical: 8,
+    borderRadius: 12,
     shadowColor: '#000',
     shadowOffset: { width: 0, height: 1 },
     shadowOpacity: 0.1,
@@ -271,63 +271,60 @@ const styles = StyleSheet.create({
   },
   searchInput: {
     flex: 1,
-    height: 40,
     fontSize: 16,
     color: '#333333',
   },
   activeFiltersContainer: {
-    marginHorizontal: 16,
-    marginTop: 8,
-    marginBottom: 4,
+    paddingHorizontal: 16,
+    paddingVertical: 8,
   },
   activeFiltersTitle: {
     fontSize: 14,
-    fontWeight: '500',
-    color: '#555555',
-    marginBottom: 4,
+    fontWeight: '600',
+    color: '#666666',
+    marginBottom: 8,
   },
   filterChipsContainer: {
     flexDirection: 'row',
     flexWrap: 'wrap',
+    gap: 8,
   },
   filterChip: {
-    backgroundColor: '#E0E0E0',
-    paddingHorizontal: 10,
+    backgroundColor: '#E8F5E9',
+    paddingHorizontal: 12,
     paddingVertical: 6,
     borderRadius: 16,
-    marginRight: 8,
-    marginBottom: 8,
   },
   filterChipText: {
     fontSize: 12,
-    color: '#333333',
+    color: '#28693C',
   },
   listContent: {
     padding: 16,
   },
   cardContainer: {
-    height: 500,
     marginBottom: 16,
   },
   emptyStateContainer: {
     alignItems: 'center',
     justifyContent: 'center',
-    padding: 40,
+    padding: 32,
   },
   emptyStateText: {
     fontSize: 16,
-    color: '#777777',
-    textAlign: 'center',
+    color: '#666666',
     marginBottom: 16,
+    textAlign: 'center',
   },
   resetButton: {
-    backgroundColor: '#4A90E2',
+    backgroundColor: '#28693C',
     paddingHorizontal: 16,
     paddingVertical: 8,
-    borderRadius: 20,
+    borderRadius: 8,
   },
   resetButtonText: {
     color: '#FFFFFF',
-    fontWeight: '500',
+    fontSize: 14,
+    fontWeight: '600',
   },
-});
+}); 
